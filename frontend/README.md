@@ -1,58 +1,49 @@
-# Next Entree
+# Naccent - AI-Powered English Pronunciation Trainer
 
-Next.js 14+ starter template with app router, shadcn/ui, typesafe env, icons and configs setup.
-
-## Usage
-
-1. Setup a project using the template
-
-```bash
-pnpm create next-app -e https://github.com/redpangilinan/next-entree
-```
-
-```bash
-npx create-next-app -e https://github.com/redpangilinan/next-entree
-```
-
-```bash
-yarn create next-app -e https://github.com/redpangilinan/next-entree
-```
-
-```bash
-bunx create-next-app -e https://github.com/redpangilinan/next-entree
-```
-
-2. Copy `.env.example` to `.env.local`
-
-```bash
-cp .env.example .env.local
-```
+Naccent is an innovative web application designed to help users improve their English pronunciation using advanced AI technology. The platform combines speech recognition, real-time feedback, and daily practice exercises to enhance users' speaking skills.
 
 ## Features
 
-This template uses [shadcn](https://github.com/shadcn)'s Next.js app structure from [shadcn/ui](https://ui.shadcn.com/).
+### 1. Real-time Pronunciation Assessment
+- Advanced speech recognition technology
+- Phoneme-level pronunciation feedback
+- Quality scores for each sound
+- Visual feedback with color-coded results
+- Comparison with native speaker pronunciation
 
-- Next.js 14+ `/app` router
-- TypeScript
-- Tailwind CSS
-- shadcn/ui (Radix UI + Tailwind)
-- Prettier (w/ auto sort imports and tailwind classes)
-- SEO optimized
-- Typesafe env, icons, and config
-- Ready to use - jump right into development
+### 2. Daily Practice Materials
+- Tongue twisters for pronunciation practice
+- Common English phrases
+- Famous movie quotes
+- Regular updates to keep content fresh
 
-## Scripts
+### 3. Progress Tracking
+- Detailed pronunciation analytics
+- Historical performance tracking
+- Progress visualization through charts
+- Personalized feedback on areas for improvement
 
-If you are using a different package manager, be sure to update the package.json format scripts.
+### 4. Interactive Learning Tools
+- Voice recording capabilities
+- Playback comparison with native speakers
+- Adjustable difficulty levels
+- Comprehensive phoneme analysis
 
-1. Check project formatting
 
-```bash
-pnpm format:check
-```
+## Technology Stack
 
-2. Format the project
+- **Frontend**: Next.js 14+
+- **UI Framework**: Tailwind CSS with shadcn/ui
+- **Speech Processing**: 
+  - OpenAI Whisper API for transcription
+  - SpeechAce API for pronunciation assessment
+  - Claude AI for content generation
+- **Authentication**: Built-in Next.js authentication
+- **Styling**: Tailwind CSS with custom theming
+- **State Management**: React hooks
+- **Charts**: Chart.js for analytics visualization
 
-```bash
-pnpm format
-```
+## Getting Started
+
+1. Clone the repository
+2. Install dependencies:
