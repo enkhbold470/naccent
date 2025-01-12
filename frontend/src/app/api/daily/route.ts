@@ -15,6 +15,7 @@ interface DailyContent {
 }
 
 async function getDailyContent(): Promise<DailyContent> {
+    console.log('Generating new daily content...');
     const msg = await anthropic.messages.create({
         model: 'claude-3-sonnet-20240229',
         max_tokens: 1024,
@@ -29,6 +30,7 @@ async function getDailyContent(): Promise<DailyContent> {
     }
 
     const content = JSON.parse(msg.content[0].text);
+    console.log('Generated content:', content);
     return {
         ...content,
         lastUpdated: new Date().toISOString()
@@ -37,10 +39,12 @@ async function getDailyContent(): Promise<DailyContent> {
 
 export async function GET() {
     try {
+        console.log('Handling GET request for daily content');
         const cachePath = join(process.cwd(), 'temp', 'daily_content.json');
         let dailyContent: DailyContent;
 
         try {
+            console.log('Attempting to read from cache:', cachePath);
             const cached = await readFile(cachePath, 'utf-8');
             const content = JSON.parse(cached);
             const lastUpdate = new Date(content.lastUpdated);
@@ -48,13 +52,17 @@ export async function GET() {
 
             // Check if content is from a different day
             if (lastUpdate.toDateString() !== now.toDateString()) {
+                console.log('Cache expired, generating new content');
                 throw new Error('Cache expired');
             }
+            console.log('Using cached content');
             dailyContent = content;
         } catch {
             // If file doesn't exist or is outdated, get new content
+            console.log('Cache miss, getting new content');
             dailyContent = await getDailyContent();
             await writeFile(cachePath, JSON.stringify(dailyContent), 'utf-8');
+            console.log('New content saved to cache');
         }
 
         return NextResponse.json(dailyContent);

@@ -10,15 +10,21 @@ const openai = new OpenAI({
 
 export async function POST(request: NextRequest) {
     try {
+        console.log('Starting transcription process');
         const formData = await request.formData();
         const audioFile = formData.get('audio') as Blob;
+        console.log('Received audio file');
+        
         const tempDir = join(process.cwd(), 'temp');
         const tempFilePath = join(tempDir, `${Date.now()}.wav`);
+        console.log('Created temporary file path:', tempFilePath);
 
         await mkdir(tempDir, { recursive: true });
         const arrayBuffer = await audioFile.arrayBuffer();
         await writeFile(tempFilePath, new Uint8Array(arrayBuffer));
+        console.log('Saved audio file to temp directory');
 
+        console.log('Starting OpenAI transcription');
         const transcription = await openai.audio.transcriptions.create({
             file: new File([new Uint8Array(arrayBuffer)], 'audio.wav', { type: 'audio/wav' }),
             model: 'whisper-1',
@@ -26,8 +32,10 @@ export async function POST(request: NextRequest) {
             response_format: 'json',
             prompt: "This is American English speech.",
         });
+        console.log('Completed OpenAI transcription');
 
         await unlink(tempFilePath).catch(console.error);
+        console.log('Cleaned up temporary file');
 
         const transcriptionPath = join(process.cwd(), 'temp', 'latest_transcription.json');
         await writeFile(
@@ -35,7 +43,9 @@ export async function POST(request: NextRequest) {
             JSON.stringify({ text: transcription.text }),
             'utf-8'
         );
+        console.log('Saved transcription to file');
 
+        console.log('Returning transcription response');
         return NextResponse.json({ text: transcription.text });
     } catch (error) {
         console.error('Transcription error:', error);
@@ -47,4 +57,4 @@ export async function POST(request: NextRequest) {
 }
 
 export const runtime = 'nodejs';
-export const dynamic = 'force-dynamic'; 
+export const dynamic = 'force-dynamic';

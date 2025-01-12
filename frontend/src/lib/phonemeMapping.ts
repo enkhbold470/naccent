@@ -1,47 +1,57 @@
 // Create a mapping object for ARPABET phonemes
 export const ARPABETMapping = {
   // Vowels
-  'aa': 'aa', // odd, father
-  'ae': 'ae', // at, fast
-  'ah': 'ah', // cut, but
-  'ao': 'ao', // caught, law
-  'aw': 'aw', // cow, now
-  'ay': 'ay', // hide, my
-  'eh': 'eh', // red, any
-  'er': 'er', // bird, hurt
-  'ey': 'ey', // say, eight
-  'ih': 'ih', // bid, pin
-  'iy': 'iy', // bee, see
-  'ow': 'ow', // go, home
-  'oy': 'oy', // boy, join
-  'uh': 'uh', // good, should
-  'uw': 'uw', // blue, food
+  'aa': 'aa', // odd, father, spa
+  'ae': 'ae', // at, fast, cat
+  'ah': 'ah', // cut, but, hut
+  'ao': 'ao', // caught, law, fall
+  'aw': 'aw', // cow, now, house
+  'ay': 'ay', // hide, my, time
+  'eh': 'eh', // red, any, head
+  'er': 'er', // bird, hurt, word
+  'ey': 'ey', // say, eight, play
+  'ih': 'ih', // bid, pin, hit
+  'iy': 'iy', // bee, see, meet
+  'ow': 'ow', // go, home, boat
+  'oy': 'oy', // boy, join, toy
+  'uh': 'uh', // good, should, foot
+  'uw': 'uw', // blue, food, moon
 
   // Consonants
-  'b': 'b',   // bee
-  'ch': 'ch', // cheese
-  'd': 'd',   // dee
-  'dh': 'dh', // thee
-  'f': 'f',   // fee
-  'g': 'g',   // green
-  'hh': 'hh', // he
-  'jh': 'jh', // gee
-  'k': 'k',   // key
-  'l': 'l',   // lee
-  'm': 'm',   // me
-  'n': 'n',   // knee
-  'ng': 'ng', // ping
-  'p': 'p',   // pee
-  'r': 'r',   // read
-  's': 's',   // sea
-  'sh': 'sh', // she
-  't': 't',   // tea
-  'th': 'th', // thin
-  'v': 'v',   // vee
-  'w': 'w',   // we
-  'y': 'y',   // yield
-  'z': 'z',   // zee
-  'zh': 'zh'  // measure
+  'b': 'b',   // bee, baby, web
+  'ch': 'ch', // cheese, catch, church
+  'd': 'd',   // dee, dog, bed
+  'dh': 'dh', // thee, this, that
+  'f': 'f',   // fee, fish, life
+  'g': 'g',   // green, bag, gift
+  'hh': 'hh', // he, hat, who
+  'jh': 'jh', // gee, jam, edge
+  'k': 'k',   // key, cat, back
+  'l': 'l',   // lee, light, fall
+  'm': 'm',   // me, mom, home
+  'n': 'n',   // knee, night, sun
+  'ng': 'ng', // ping, sing, ring
+  'p': 'p',   // pee, pat, top
+  'ph': 'f',  // phone, buffet, graph
+  'r': 'r',   // read, right, car
+  's': 's',   // sea, sun, miss
+  'sh': 'sh', // she, ship, wish
+  't': 't',   // tea, top, hat
+  'th': 'th', // thin, bath, math
+  'v': 'v',   // vee, van, love
+  'w': 'w',   // we, win, away
+  'wh': 'w',  // what, where, when
+  'y': 'y',   // yield, yes, beyond
+  'z': 'z',   // zee, zoo, buzz
+  'zh': 'zh', // measure, vision, beige
+  'gh': 'f',  // laugh, enough, rough
+  'gn': 'n',  // gnome, gnat, sign
+  'kn': 'n',  // knife, knee, know
+  'mb': 'm',  // climb, comb, thumb
+  'ps': 's',  // psychology, psychic, psalm
+  'pn': 'n',  // pneumonia, pneumatic
+  'wr': 'r',  // write, wrong, wrist
+//   'ph': 'f'   // phone, iphone, phonics
 };
 
 // Common word to ARPABET mapping
@@ -144,7 +154,12 @@ export const commonWordsToARPABET = {
   // Add more common American English patterns
   "gonna": "g|aa|n|uh",
   "wanna": "w|aa|n|uh",
-  "gotta": "g|aa|t|uh"
+  "gotta": "g|aa|t|uh",
+  "buffet": "b|v|f|f|ey|ey",
+  
+  // Technical terms
+  "iphone": "ay|f|ow|n",
+  "pneumonia": "n|uw|m|ow|n|y|ah"
 }; 
 
 // Add American-specific phoneme adjustments
@@ -160,3 +175,4 @@ const americanPhonemeAdjustments = {
     },
     // Add more American-specific adjustments
 }; 
+

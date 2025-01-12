@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { ModeToggle } from '@/components/mode-toggle'
 import Link from 'next/link'
-
+import Charts from '@/components/Charts'
 const image = "https://images.pexels.com/photos/28406651/pexels-photo-28406651/free-photo-of-historic-armenian-church-on-akdamar-island-van.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
 
 export default function LanguageProfile() {
@@ -92,6 +92,11 @@ export default function LanguageProfile() {
           </div>
         </div>
       </Card>
+            
+        {/* Progress Chart */}  
+        <div className="mx-4 mt-6">
+          <Charts  />
+        </div>
 
      
     </div>
