@@ -27,3 +27,6 @@ phn = phonemize(
     njobs=4)
 
 print(phn)
+print(phn)
+print(phn)
+
