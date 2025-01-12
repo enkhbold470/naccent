@@ -3,6 +3,7 @@ import Image from 'next/image'
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { ModeToggle } from '@/components/mode-toggle'
+import Link from 'next/link'
 
 const image = "https://images.pexels.com/photos/28406651/pexels-photo-28406651/free-photo-of-historic-armenian-church-on-akdamar-island-van.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
 
@@ -29,11 +30,11 @@ export default function LanguageProfile() {
               <div className='flex  items-center'>
 
               <ModeToggle />
-              <a href = "/history">
+              <Link href = "/history">
               <Button variant="ghost" className="text-gray-600 gap-1">
                 History <ArrowRight className="w-4 h-4" />
               </Button>
-              </a>
+              </Link>
               </div>
             </div>
             <p className="text-sm text-gray-600 mt-1">You have a 3 day streak!</p>
@@ -83,11 +84,11 @@ export default function LanguageProfile() {
           </div>
 
           <div className="flex justify-end">
-            <a href = "/accent">
+            <Link href = "/accent">
             <Button className="bg-orange-400 hover:bg-orange-500">
               Lets go
             </Button>
-            </a>
+            </Link>
           </div>
         </div>
       </Card>
