@@ -3,6 +3,7 @@
 import { Slider } from "@/components/ui/slider"
 import { Button } from "@/components/ui/button"
 import { Home, Mic, User, Volume2 } from 'lucide-react'
+import  VoiceRecorder  from "@/components/VoiceRecorder"
 
 export default function PronunciationTrainer() {
   return (
@@ -65,6 +66,12 @@ export default function PronunciationTrainer() {
         </div>
       </main>
 
+      <div className='container mx-auto py-8'>
+            <h1 className='text-2xl font-semibold text-center mb-8'>
+                Pronunciation Checker
+            </h1>
+            <VoiceRecorder />
+        </div>
 
     </div>
   )

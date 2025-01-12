@@ -21,7 +21,7 @@ interface PhoneScore {
     // Add other properties if needed
 }
 
-const VoiceRecorder = () => {
+export default function VoiceRecorder(){
     const [recording, setRecording] = useState(false);
     const [audioFile, setAudioFile] = useState<Blob | null>(null);
     const [isUploading, setIsUploading] = useState(false);
@@ -345,4 +345,3 @@ const VoiceRecorder = () => {
     );
 };
 
-export default VoiceRecorder; 
