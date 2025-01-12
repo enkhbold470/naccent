@@ -37,4 +37,4 @@ next-env.d.ts
 
 # uploads
 /uploads
-/temp
+/temp/latest_transcription.json
