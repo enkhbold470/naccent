@@ -1,12 +1,12 @@
-import withPWA from "next-pwa"
-import runtimeCaching from "next-pwa/cache.js"
+import runtimeCaching from "next-pwa/cache.js";
+import withPWA from "next-pwa";
 
 const pwaConfig = withPWA({
   dest: "public",
   register: true,
   skipWaiting: true,
   runtimeCaching,
-})
+});
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -29,7 +29,7 @@ const nextConfig = {
       },
     ],
   },
-}
+};
 // module.exports = withPWA(nextConfig);
 
-export default nextConfig
+export default nextConfig;

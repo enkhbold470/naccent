@@ -20,6 +20,7 @@ export const metadata: Metadata = {
     template: `%s | ${siteConfig.name}`,
   },
   description: siteConfig.description,
+  manifest: "/favicon_io/site.webmanifest",
   keywords: siteConfig.keywords,
   authors: [
     {
@@ -66,7 +67,9 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head />
+      <head >
+      <link rel="manifest" href="/favicon_io/site.webmanifest" />
+      </head>
       <body
         className={cn(
           "min-h-screen bg-background antialiased",
