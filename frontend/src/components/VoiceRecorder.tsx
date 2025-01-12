@@ -1,6 +1,7 @@
 "use client"
 import React, { useState, useRef } from 'react';
 import { Button } from "@/components/ui/button";
+import { PronunciationScore } from "@/components/PronunciationScore";
 import { commonWordsToARPABET } from '@/lib/phonemeMapping';
 
 const VoiceRecorder = () => {
@@ -160,26 +161,14 @@ const VoiceRecorder = () => {
                 </Button>
             </div>
 
-            {transcription && (
-                <div className="mt-2">
-                    <h3 className="font-bold">Transcription:</h3>
-                    <p>{transcription}</p>
-                </div>
-            )}
-
             {error && (
                 <div className="text-red-500">
                     Error: {error}
                 </div>
             )}
 
-            {result && (
-                <div className="mt-4 p-4 bg-gray-100 rounded">
-                    <h3 className="font-bold">Results:</h3>
-                    <pre className="whitespace-pre-wrap">
-                        {JSON.stringify(result, null, 2)}
-                    </pre>
-                </div>
+            {result && transcription && (
+                <PronunciationScore result={result} transcription={transcription} />
             )}
         </div>
     );
