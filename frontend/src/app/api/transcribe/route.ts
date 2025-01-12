@@ -28,6 +28,14 @@ export async function POST(request: NextRequest) {
         });
 
         await unlink(tempFilePath).catch(console.error);
+
+        const transcriptionPath = join(process.cwd(), 'temp', 'latest_transcription.json');
+        await writeFile(
+            transcriptionPath,
+            JSON.stringify({ text: transcription.text }),
+            'utf-8'
+        );
+
         return NextResponse.json({ text: transcription.text });
     } catch (error) {
         console.error('Transcription error:', error);

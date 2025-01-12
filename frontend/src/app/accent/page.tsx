@@ -1,11 +1,104 @@
 'use client'
 
+import { useState, useRef } from 'react'
 import { Slider } from "@/components/ui/slider"
 import { Button } from "@/components/ui/button"
 import { Home, Mic, User, Volume2 } from 'lucide-react'
-import  VoiceRecorder  from "@/components/VoiceRecorder"
+import VoiceRecorder from "@/components/VoiceRecorder"
 
 export default function PronunciationTrainer() {
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [isPlayingTTS, setIsPlayingTTS] = useState(false);
+  const [lastTranscription, setLastTranscription] = useState<string>('');
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const ttsAudioRef = useRef<HTMLAudioElement | null>(null);
+
+  const playLatestRecording = async () => {
+    try {
+      if (audioRef.current) {
+        if (isPlaying) {
+          audioRef.current.pause();
+          setIsPlaying(false);
+          return;
+        }
+      }
+
+      const response = await fetch('/api/audio/latest');
+      if (!response.ok) {
+        throw new Error('No audio found');
+      }
+
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+
+      if (!audioRef.current) {
+        audioRef.current = new Audio();
+      }
+
+      audioRef.current.src = url;
+      audioRef.current.onended = () => {
+        setIsPlaying(false);
+        URL.revokeObjectURL(url);
+      };
+
+      await audioRef.current.play();
+      setIsPlaying(true);
+    } catch (error) {
+      console.error('Error playing audio:', error);
+    }
+  };
+
+  const playNativeSpeaker = async () => {
+    try {
+      if (ttsAudioRef.current) {
+        if (isPlayingTTS) {
+          ttsAudioRef.current.pause();
+          setIsPlayingTTS(false);
+          return;
+        }
+      }
+
+      // First, get the latest transcription
+      const response = await fetch('/api/transcribe/latest');
+      if (!response.ok) {
+        throw new Error('No transcription found');
+      }
+      const { text } = await response.json();
+      setLastTranscription(text);
+
+      // Then, get the TTS audio
+      const ttsResponse = await fetch('/api/tts', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ text }),
+      });
+
+      if (!ttsResponse.ok) {
+        throw new Error('TTS failed');
+      }
+
+      const blob = await ttsResponse.blob();
+      const url = URL.createObjectURL(blob);
+
+      if (!ttsAudioRef.current) {
+        ttsAudioRef.current = new Audio();
+      }
+
+      ttsAudioRef.current.src = url;
+      ttsAudioRef.current.onended = () => {
+        setIsPlayingTTS(false);
+        URL.revokeObjectURL(url);
+      };
+
+      await ttsAudioRef.current.play();
+      setIsPlayingTTS(true);
+    } catch (error) {
+      console.error('Error playing TTS:', error);
+    }
+  };
+
   return (
     <div className="max-w-md mx-auto flex flex-col pt-[4rem]">
       <main className="">
@@ -28,30 +121,27 @@ export default function PronunciationTrainer() {
 
         {/* Audio controls */}
         <div className="space-y-2 mb-8">
-          <div className="px-2 flex items-center w-full justify-between h-16 bg-red-300 rounded-md">
-          <Button  
-          >
-            <Volume2 className="h-6 w-6 mr-2" />
-          </Button>
-          You
-          <Button variant="default" size="icon" className="h-14 w-14 rounded-full">
-            <Mic className="h-6 w-6" />
-          </Button>
-          </div>
-       
           <div className="px-2 flex items-center w-full justify-between h-16 bg-green-300 rounded-md">
-          <Button>
-            <Volume2 className="h-6 w-6 mr-2" />
-          </Button>
-          <div className="">
-          Native Speaker
-          </div>
-          <Button variant="default" size="icon" className="h-14 w-14 rounded-full">
-            <Mic className="h-6 w-6" />
-          </Button>
+            <Button
+              onClick={playLatestRecording}
+              variant="ghost"
+              className="flex items-center gap-2"
+            >
+              <Volume2 className="h-6 w-6" />
+              {isPlaying ? 'Stop' : 'Play'} Your Speech
+            </Button>
+           
+            <Button
+              onClick={playNativeSpeaker}
+              variant="ghost"
+              className="flex items-center gap-2"
+            >
+              <Volume2 className="h-6 w-6" />
+              {isPlayingTTS ? 'Stop' : 'Play'} Native Speaker
+            </Button>
           </div>
         </div>
-
+       
         {/* Difficulty slider */}
         <div className="mb-8">
           <div className="flex justify-between mb-2">
