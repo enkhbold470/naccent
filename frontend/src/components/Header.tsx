@@ -13,7 +13,7 @@ export default function Header() {
                     className="object-cover"
                 />
             </div>
-          <Link href="/">
+          <Link href="/home">
             <Image
                 src="logo.svg"
                 alt="Logo"

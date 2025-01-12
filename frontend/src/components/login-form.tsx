@@ -79,7 +79,7 @@ export function LoginForm({
                     //   required
                   />
                 </div>
-                <Link href="/accent">
+                <Link href="/home">
                   <Button type="submit" className="w-full">
                     Login
                   </Button>

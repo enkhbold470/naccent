@@ -4,7 +4,7 @@ import { env } from "@/env.mjs"
 
 export const siteConfig: SiteConfig = {
   name: "Naccent ",
-  author: "redpangilinan",
+  author: "Naccent Team",
   description:
     "Naccent is a platform for creating and sharing AI-generated images.",
   keywords: ["Naccent", "AI", "Images", "Generative AI"],

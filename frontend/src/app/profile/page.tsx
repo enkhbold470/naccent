@@ -29,7 +29,7 @@ export default function LanguageProfile() {
               <h1 className="text-xl font-semibold">Katskt</h1>
               <div className='flex  items-center'>
 
-              <ModeToggle />
+              {/* <ModeToggle /> */}
               <Link href = "/history">
               <Button variant="ghost" className="text-gray-600 gap-1">
                 History <ArrowRight className="w-4 h-4" />
@@ -48,10 +48,10 @@ export default function LanguageProfile() {
             <div
               key={i}
               className={`aspect-square rounded-sm ${
-                Math.random() > 0.8 ? 'bg-orange-500' : 
-                Math.random() > 0.6 ? 'bg-orange-400' :
-                Math.random() > 0.4 ? 'bg-orange-300' :
-                Math.random() > 0.2 ? 'bg-orange-200' : 'bg-green-100'
+                Math.random() > 0.8 ? 'bg-green-400' : 
+                Math.random() > 0.6 ? 'bg-green-300' :
+                Math.random() > 0.4 ? 'bg-green-200' :
+                Math.random() > 0.2 ? 'bg-white' : 'bg-green-100'
               }`}
             />
           ))}

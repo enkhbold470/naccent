@@ -1,7 +1,17 @@
 "use client"
 import React, { useState, useRef } from 'react';
 import { Button } from "@/components/ui/button";
-import { PronunciationScore } from "@/components/PronunciationScore";
+import { Mic } from 'lucide-react';
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { commonWordsToARPABET } from '@/lib/phonemeMapping';
 
 const VoiceRecorder = () => {
@@ -11,6 +21,7 @@ const VoiceRecorder = () => {
     const [result, setResult] = useState<any>(null);
     const [error, setError] = useState<string | null>(null);
     const [transcription, setTranscription] = useState<string>('');
+    const [accent, setAccent] = useState("general");
     const mediaRecorderRef = useRef<MediaRecorder | null>(null);
     const audioChunksRef = useRef<Blob[]>([]);
 
@@ -65,20 +76,15 @@ const VoiceRecorder = () => {
             mediaRecorderRef.current = new MediaRecorder(stream);
             mediaRecorderRef.current.ondataavailable = (event) => {
                 audioChunksRef.current.push(event.data);
-                console.log("Audio data available:", event.data);
             };
             mediaRecorderRef.current.onstop = () => {
                 const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/wav' });
                 setAudioFile(audioBlob);
-                console.log("Recording stopped, blob created:", audioBlob);
                 audioChunksRef.current = [];
-                
-                // Automatically transcribe the audio
                 transcribeAudio(audioBlob);
             };
             mediaRecorderRef.current.start();
             setRecording(true);
-            console.log("Recording started");
         } catch (err) {
             console.error("Error starting recording:", err);
             setError("Failed to start recording");
@@ -153,22 +159,139 @@ const VoiceRecorder = () => {
         }
     };
 
+    const getScoreColor = (score: number) => {
+        if (score >= 80) return "text-green-500";
+        if (score >= 60) return "text-orange-500";
+        return "text-red-500";
+    };
+
+    const formatPhonemeDisplay = (phoneme: string) => {
+        // Remove pipes and format for display
+        return phoneme.replace(/\|/g, ' ');
+    };
+
     return (
-        <div className="flex flex-col gap-4">
-            <div className="flex gap-2">
-                <Button onClick={recording ? stopRecording : startRecording}>
-                    {recording ? 'Stop Recording' : 'Start Recording'}
+        <div className="max-w-3xl mx-auto p-6 space-y-8">
+            {/* Word Display */}
+            <div className="text-center space-y-2">
+                <div className="text-4xl font-medium">
+                    {transcription && transcription.split('').map((char, i) => (
+                        <span key={i} className={result ? getScoreColor(
+                            result.word_score.phone_score_list[i]?.quality_score || 0
+                        ) : ''}>
+                            {char}
+                        </span>
+                    ))}
+                </div>
+                {result && (
+                    <div className="space-y-2">
+                        <div className="text-xl text-gray-600">
+                            Expected: {formatPhonemeDisplay(result.word_score.word)}
+                        </div>
+                        <div className="text-xl text-gray-600">
+                            Heard: {result.word_score.phone_score_list.map(p => p.sound_most_like).join(' ')}
+                        </div>
+                    </div>
+                )}
+            </div>
+
+            {/* Microphone Button */}
+            <div className="flex justify-center">
+                <Button 
+                    size="lg"
+                    onClick={recording ? stopRecording : startRecording}
+                    className={`rounded-full px-8 py-6 flex items-center gap-2 ${
+                        recording ? 'bg-red-500 hover:bg-red-600' : 'bg-blue-500 hover:bg-blue-600'
+                    }`}
+                    disabled={isUploading}
+                >
+                    <Mic className="w-6 h-6" />
+                    <span>{recording ? 'Stop' : 'Tap to Speak'}</span>
                 </Button>
             </div>
 
+            {/* Accent Selection */}
+            <div className="space-y-2">
+                <Label>Select your preferred accent to score against:</Label>
+                <RadioGroup 
+                    defaultValue="general" 
+                    onValueChange={setAccent}
+                    className="flex gap-4"
+                >
+                    <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="general" id="general" />
+                        <Label htmlFor="general">General English</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="british" id="british" />
+                        <Label htmlFor="british">British English</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="american" id="american" />
+                        <Label htmlFor="american">American English</Label>
+                    </div>
+                </RadioGroup>
+            </div>
+
             {error && (
-                <div className="text-red-500">
+                <div className="text-red-500 text-center">
                     Error: {error}
                 </div>
             )}
 
-            {result && transcription && (
-                <PronunciationScore result={result} transcription={transcription} />
+            {result && (
+                <>
+                    {/* Overall Score */}
+                    <div className="space-y-2">
+                        <h2 className="text-xl text-blue-500 text-center">Overall</h2>
+                        <div className="flex justify-center">
+                            <div className="bg-blue-100 rounded-full px-8 py-4 flex items-center gap-2">
+                                <span className="text-4xl font-bold text-blue-500">
+                                    {Math.round(result.word_score.quality_score)}
+                                </span>
+                                <Mic className="w-5 h-5 text-blue-500" />
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Phoneme Results */}
+                    <div className="space-y-4">
+                        <h2 className="text-xl font-semibold">Phoneme-level Results</h2>
+                        <Table>
+                            <TableHeader>
+                                <TableRow>
+                                    <TableHead>Expected</TableHead>
+                                    <TableHead>Heard As</TableHead>
+                                    <TableHead>Quality Score</TableHead>
+                                    <TableHead>Feedback</TableHead>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                                {result.word_score.phone_score_list.map((phone: any, index: number) => (
+                                    <TableRow key={index}>
+                                        <TableCell>{phone.phone}</TableCell>
+                                        <TableCell className={
+                                            phone.phone === phone.sound_most_like 
+                                                ? "text-green-500" 
+                                                : "text-red-500"
+                                        }>
+                                            {phone.sound_most_like}
+                                        </TableCell>
+                                        <TableCell className={getScoreColor(phone.quality_score)}>
+                                            {Math.round(phone.quality_score)}
+                                        </TableCell>
+                                        <TableCell>
+                                            {phone.phone === phone.sound_most_like 
+                                                ? 'Correct sound' 
+                                                : `Should be "${phone.phone}" sound`
+                                            }
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </div>
+                </>
             )}
         </div>
     );
