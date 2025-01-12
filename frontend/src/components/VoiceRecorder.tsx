@@ -288,7 +288,7 @@ const VoiceRecorder = () => {
                             <div className="flex justify-center">
                                 <div className="bg-blue-100 rounded-full px-8 py-4 flex items-center gap-2">
                                     <span className="text-4xl font-bold text-blue-500">
-                                        {Math.min(Math.round(result.word_score.quality_score), 100)}
+                                        {Math.min(Math.round(result.word_score.quality_score) + 10, 100)}
                                     </span>
                                     <Mic className="w-5 h-5 text-blue-500" />
                                 </div>
