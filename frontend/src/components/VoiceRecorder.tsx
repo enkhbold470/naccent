@@ -15,6 +15,12 @@ import {
 import { commonWordsToARPABET } from '@/lib/phonemeMapping';
 import { Skeleton } from "@/components/ui/skeleton";
 
+// Define the type for the phone score item
+interface PhoneScore {
+    sound_most_like: string;
+    // Add other properties if needed
+}
+
 const VoiceRecorder = () => {
     const [recording, setRecording] = useState(false);
     const [audioFile, setAudioFile] = useState<Blob | null>(null);
@@ -198,7 +204,7 @@ const VoiceRecorder = () => {
                                     Expected: {formatPhonemeDisplay(result.word_score.word)}
                                 </div>
                                 <div className="text-xl text-gray-600">
-                                    Heard: {result.word_score.phone_score_list.map(p => p.sound_most_like).join(' ')}
+                                    Heard: {result.word_score.phone_score_list.map((p: PhoneScore) => p.sound_most_like).join(' ')}
                                 </div>
                             </div>
                         )}
