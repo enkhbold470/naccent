@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import {
   Card,
   CardContent,
-  CardDescription,
+  // CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
@@ -21,9 +21,9 @@ export function LoginForm({
       <Card>
         <CardHeader className="text-center">
           <CardTitle className="text-xl">Welcome back</CardTitle>
-          <CardDescription>
+          {/* <CardDescription> */}
             Login with your UCSB NetID or Google account
-          </CardDescription>
+          {/* </CardDescription> */}
         </CardHeader>
         <CardContent>
           <form>

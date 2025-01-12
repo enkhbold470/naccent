@@ -103,28 +103,28 @@ export default function PronunciationTrainer() {
     <div className="max-w-md mx-auto flex flex-col pt-[4rem]">
       <main className="">
 
-        {/* Text display area */}
+        {/* Text display area
         <div className=" rounded-lg p-6 shadow-sm mb-6">
           <p className="text-lg leading-relaxed">
             The quick <span className="text-red-500 font-bold">bro</span>wn fox jumps over{' '}
             <span className="text-red-500 font-bold">the</span> lazy dog
           </p>
           <p className="mt-4 italic">You can also edit your text</p>
-        </div>
+        </div> */}
 
-        {/* Word focus area */}
+        {/* Word focus area
         <div className="mb-6">
           <p className="text-lg">
             <span className="text-red-500 font-bold">bro</span>wn
           </p>
-        </div>
+        </div> */}
 
         {/* Audio controls */}
         <div className="space-y-2 mb-8">
-          <div className="px-2 flex items-center w-full justify-between h-16 bg-green-300 rounded-md">
+          <div className="px-2 flex items-center w-full justify-between h-16 bg-inherit-300 rounded-md">
             <Button
               onClick={playLatestRecording}
-              variant="ghost"
+              variant="outline"
               className="flex items-center gap-2"
             >
               <Volume2 className="h-6 w-6" />
@@ -133,7 +133,7 @@ export default function PronunciationTrainer() {
            
             <Button
               onClick={playNativeSpeaker}
-              variant="ghost"
+              variant="outline"
               className="flex items-center gap-2"
             >
               <Volume2 className="h-6 w-6" />
