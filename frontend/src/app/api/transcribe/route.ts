@@ -22,7 +22,9 @@ export async function POST(request: NextRequest) {
         const transcription = await openai.audio.transcriptions.create({
             file: new File([new Uint8Array(arrayBuffer)], 'audio.wav', { type: 'audio/wav' }),
             model: 'whisper-1',
-            language: 'en' // Specify English for transcription
+            language: 'en',
+            response_format: 'json',
+            prompt: "This is American English speech.",
         });
 
         await unlink(tempFilePath).catch(console.error);

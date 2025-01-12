@@ -13,6 +13,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { commonWordsToARPABET } from '@/lib/phonemeMapping';
+import { Skeleton } from "@/components/ui/skeleton";
 
 const VoiceRecorder = () => {
     const [recording, setRecording] = useState(false);
@@ -24,6 +25,7 @@ const VoiceRecorder = () => {
     const [accent, setAccent] = useState("general");
     const mediaRecorderRef = useRef<MediaRecorder | null>(null);
     const audioChunksRef = useRef<Blob[]>([]);
+    const [isTranscribing, setIsTranscribing] = useState(false);
 
     // Function to convert text to ARPABET phonemes
     const textToARPABET = (text: string): string => {
@@ -40,7 +42,7 @@ const VoiceRecorder = () => {
                 'a': 'ae',  // as in "cat"
                 'e': 'eh',  // as in "bed"
                 'i': 'ih',  // as in "bit"
-                'o': 'aa',  // as in "hot"
+                'o': 'uh',  // as in "hot"
                 'u': 'ah',  // as in "but"
                 'h': 'hh',
                 'l': 'l',
@@ -101,10 +103,10 @@ const VoiceRecorder = () => {
 
     const transcribeAudio = async (audioBlob: Blob) => {
         try {
+            setIsTranscribing(true);
             const formData = new FormData();
             formData.append('audio', audioBlob);
 
-            // Call your Whisper API endpoint
             const response = await fetch('/api/transcribe', {
                 method: 'POST',
                 body: formData
@@ -116,15 +118,15 @@ const VoiceRecorder = () => {
             const text = data.text;
             setTranscription(text);
 
-            // Convert transcription to ARPABET phonemes
             const phonemes = textToARPABET(text);
             console.log("Converted to phonemes:", phonemes);
             
-            // Automatically trigger upload with the correct phonemes
             uploadAudioWithPhonemes(audioBlob, phonemes);
         } catch (err) {
             console.error("Transcription error:", err);
             setError("Failed to transcribe audio");
+        } finally {
+            setIsTranscribing(false);
         }
     };
 
@@ -161,7 +163,7 @@ const VoiceRecorder = () => {
 
     const getScoreColor = (score: number) => {
         if (score >= 80) return "text-green-500";
-        if (score >= 60) return "text-orange-500";
+        if (score <= 60) return "text-orange-500";
         return "text-red-500";
     };
 
@@ -174,24 +176,33 @@ const VoiceRecorder = () => {
         <div className="max-w-3xl mx-auto p-6 space-y-8">
             {/* Word Display */}
             <div className="text-center space-y-2">
-                <div className="text-4xl font-medium">
-                    {transcription && transcription.split('').map((char, i) => (
-                        <span key={i} className={result ? getScoreColor(
-                            result.word_score.phone_score_list[i]?.quality_score || 0
-                        ) : ''}>
-                            {char}
-                        </span>
-                    ))}
-                </div>
-                {result && (
-                    <div className="space-y-2">
-                        <div className="text-xl text-gray-600">
-                            Expected: {formatPhonemeDisplay(result.word_score.word)}
-                        </div>
-                        <div className="text-xl text-gray-600">
-                            Heard: {result.word_score.phone_score_list.map(p => p.sound_most_like).join(' ')}
-                        </div>
+                {(isUploading || isTranscribing) ? (
+                    <div className="space-y-4">
+                        <Skeleton className="h-12 w-3/4 mx-auto" />
+                        <Skeleton className="h-6 w-1/2 mx-auto" />
                     </div>
+                ) : (
+                    <>
+                        <div className="text-4xl font-medium">
+                            {transcription && transcription.split('').map((char, i) => (
+                                <span key={i} className={result ? getScoreColor(
+                                    result.word_score.phone_score_list[i]?.quality_score || 0
+                                ) : ''}>
+                                    {char}
+                                </span>
+                            ))}
+                        </div>
+                        {result && (
+                            <div className="space-y-2">
+                                <div className="text-xl text-gray-600">
+                                    Expected: {formatPhonemeDisplay(result.word_score.word)}
+                                </div>
+                                <div className="text-xl text-gray-600">
+                                    Heard: {result.word_score.phone_score_list.map(p => p.sound_most_like).join(' ')}
+                                </div>
+                            </div>
+                        )}
+                    </>
                 )}
             </div>
 
@@ -203,10 +214,15 @@ const VoiceRecorder = () => {
                     className={`rounded-full px-8 py-6 flex items-center gap-2 ${
                         recording ? 'bg-red-500 hover:bg-red-600' : 'bg-blue-500 hover:bg-blue-600'
                     }`}
-                    disabled={isUploading}
+                    disabled={isUploading || isTranscribing}
                 >
                     <Mic className="w-6 h-6" />
-                    <span>{recording ? 'Stop' : 'Tap to Speak'}</span>
+                    <span>
+                        {recording ? 'Stop' : 
+                         isTranscribing ? 'Transcribing...' :
+                         isUploading ? 'Processing...' : 
+                         'Tap to Speak'}
+                    </span>
                 </Button>
             </div>
 
@@ -239,59 +255,85 @@ const VoiceRecorder = () => {
                 </div>
             )}
 
-            {result && (
+            {(isUploading || isTranscribing) ? (
                 <>
-                    {/* Overall Score */}
+                    {/* Loading Skeletons */}
                     <div className="space-y-2">
                         <h2 className="text-xl text-blue-500 text-center">Overall</h2>
                         <div className="flex justify-center">
-                            <div className="bg-blue-100 rounded-full px-8 py-4 flex items-center gap-2">
-                                <span className="text-4xl font-bold text-blue-500">
-                                    {Math.round(result.word_score.quality_score)}
-                                </span>
-                                <Mic className="w-5 h-5 text-blue-500" />
-                            </div>
+                            <Skeleton className="h-20 w-32 rounded-full" />
                         </div>
                     </div>
 
-                    {/* Phoneme Results */}
                     <div className="space-y-4">
                         <h2 className="text-xl font-semibold">Phoneme-level Results</h2>
-                        <Table>
-                            <TableHeader>
-                                <TableRow>
-                                    <TableHead>Expected</TableHead>
-                                    <TableHead>Heard As</TableHead>
-                                    <TableHead>Quality Score</TableHead>
-                                    <TableHead>Feedback</TableHead>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                {result.word_score.phone_score_list.map((phone: any, index: number) => (
-                                    <TableRow key={index}>
-                                        <TableCell>{phone.phone}</TableCell>
-                                        <TableCell className={
-                                            phone.phone === phone.sound_most_like 
-                                                ? "text-green-500" 
-                                                : "text-red-500"
-                                        }>
-                                            {phone.sound_most_like}
-                                        </TableCell>
-                                        <TableCell className={getScoreColor(phone.quality_score)}>
-                                            {Math.round(phone.quality_score)}
-                                        </TableCell>
-                                        <TableCell>
-                                            {phone.phone === phone.sound_most_like 
-                                                ? 'Correct sound' 
-                                                : `Should be "${phone.phone}" sound`
-                                            }
-                                        </TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
+                        <div className="space-y-4">
+                            {[1, 2, 3].map((i) => (
+                                <div key={i} className="flex gap-4">
+                                    <Skeleton className="h-8 w-24" />
+                                    <Skeleton className="h-8 w-24" />
+                                    <Skeleton className="h-8 w-24" />
+                                    <Skeleton className="h-8 flex-1" />
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 </>
+            ) : (
+                result && (
+                    <>
+                        {/* Overall Score */}
+                        <div className="space-y-2">
+                            <h2 className="text-xl text-blue-500 text-center">Overall</h2>
+                            <div className="flex justify-center">
+                                <div className="bg-blue-100 rounded-full px-8 py-4 flex items-center gap-2">
+                                    <span className="text-4xl font-bold text-blue-500">
+                                        {Math.min(Math.round(result.word_score.quality_score), 100)}
+                                    </span>
+                                    <Mic className="w-5 h-5 text-blue-500" />
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Phoneme Results */}
+                        <div className="space-y-4">
+                            <h2 className="text-xl font-semibold">Phoneme-level Results</h2>
+                            <Table>
+                                <TableHeader>
+                                    <TableRow>
+                                        <TableHead>Expected</TableHead>
+                                        <TableHead>Heard As</TableHead>
+                                        <TableHead>Quality Score</TableHead>
+                                        <TableHead>Feedback</TableHead>
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                    {result.word_score.phone_score_list.map((phone: any, index: number) => (
+                                        <TableRow key={index}>
+                                            <TableCell>{phone.phone}</TableCell>
+                                            <TableCell className={
+                                                phone.phone === phone.sound_most_like 
+                                                    ? "text-green-500" 
+                                                    : "text-red-500"
+                                            }>
+                                                {phone.sound_most_like}
+                                            </TableCell>
+                                            <TableCell className={getScoreColor(phone.quality_score)}>
+                                                {Math.round(phone.quality_score)}
+                                            </TableCell>
+                                            <TableCell>
+                                                {phone.phone === phone.sound_most_like 
+                                                    ? 'Correct sound' 
+                                                    : `Should be "${phone.phone}" sound`
+                                                }
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </div>
+                    </>
+                )
             )}
         </div>
     );
