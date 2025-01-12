@@ -7,7 +7,7 @@ const image = "https://images.pexels.com/photos/28406651/pexels-photo-28406651/f
 
 export default function LanguageProfile() {
   return (
-    <div className="max-w-md mx-auto min-h-screen bg-white flex flex-col">
+    <div className="flex flex-col h-screen bg-white">
       {/* Header */}
       <header className="flex justify-between items-center p-4">
         <Image
@@ -40,9 +40,11 @@ export default function LanguageProfile() {
           <div className="flex-1">
             <div className="flex items-center justify-between">
               <h1 className="text-xl font-semibold">Katskt</h1>
+              <a href = "/history">
               <Button variant="ghost" className="text-gray-600 gap-1">
                 History <ArrowRight className="w-4 h-4" />
               </Button>
+              </a>
             </div>
             <p className="text-sm text-gray-600 mt-1">You have a 3 day streak!</p>
           </div>

@@ -6,7 +6,7 @@ import Image from "next/image"
 const image = "https://images.pexels.com/photos/28406651/pexels-photo-28406651/free-photo-of-historic-armenian-church-on-akdamar-island-van.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
 export default function DailyMissions() {
   return (
-    <div className="max-w-md mx-auto min-h-screen bg-white flex flex-col">
+    <div className="flex flex-col h-screen bg-white">
       {/* Header */}
       <header className="flex justify-between items-center p-4">
         <div className="flex items-center gap-2">
