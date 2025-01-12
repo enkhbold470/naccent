@@ -38,6 +38,51 @@ const historyData: HistoryItem[] = [
       'Reciept',
       'Coup d\'etat'
     ]
+  },
+  {
+    id: '4',
+    date: '1/08/26',
+    messages: [
+      'Can you help me with my assignment?',
+      'What time is the meeting tomorrow?',
+      'I really enjoyed the lecture on history.'
+    ]
+  },
+  {
+    id: '5',
+    date: '1/07/26',
+    messages: [
+      'Is there a way to extend the deadline?',
+      'I have a question about the last exam.',
+      'Thank you for your feedback on my paper.'
+    ]
+  },
+  {
+    id: '6',
+    date: '1/06/26',
+    messages: [
+      'I found a great resource for our project.',
+      'Can we schedule a time to meet?',
+      'I appreciate your guidance on this topic.'
+    ]
+  },
+  {
+    id: '7',
+    date: '1/05/26',
+    messages: [
+      'What are the requirements for the next assignment?',
+      'I would like to discuss my progress.',
+      'The group project is coming along well.'
+    ]
+  },
+  {
+    id: '8',
+    date: '1/04/26',
+    messages: [
+      'I need clarification on the last lecture.',
+      'Are there any recommended readings?',
+      'I enjoyed the class discussion today.'
+    ]
   }
 ]
 
@@ -54,58 +99,38 @@ export default function ChatHistory() {
   }
 
   return (
-    <div className="flex flex-col h-screen bg-white">
-      {/* Header */}
-      <div className="p-6">
-        <h1 className="text-3xl font-bold mb-4">History</h1>
-        <div className="relative">
-
-          <Search className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
-        </div>
+    <div className="flex flex-col py-[4rem] border border-red-500">
+  
+      {/* Search Bar */}
+      <div className="px-4 font-bold text-xl border-green-500">
+        History
       </div>
-
       {/* Scrollable Content */}
-      <div className="flex-1 overflow-auto bg-[#FFE4B5] p-4">
-        {historyData.map((item) => (
-          <div key={item.id} className="mb-6">
-            <div className="flex items-center gap-3 mb-2">
-              <Checkbox
-                checked={selectedItems.includes(item.id)}
-                onCheckedChange={() => toggleItem(item.id)}
-                className="border-2 border-black"
-              />
-              <span className="font-bold">{item.date}</span>
+      <div className="flex-1 overflow-auto p-4  border-blue-500">
+        {historyData.length > 0 ? (
+          historyData.map((item) => (
+            <div key={item.id} className="mb-6">
+              <div className="flex items-center gap-3 mb-2">
+                <Checkbox
+                  checked={selectedItems.includes(item.id)}
+                  onCheckedChange={() => toggleItem(item.id)}
+                  className="border-2 border-black"
+                />
+                <span className="font-bold">{item.date}</span>
+              </div>
+              {item.messages.map((message, idx) => (
+                <p key={idx} className="ml-8 mb-2">
+                  {message}
+                </p>
+              ))}
             </div>
-            {item.messages.map((message, idx) => (
-              <p key={idx} className="ml-8 mb-2">
-                {message}
-              </p>
-            ))}
-          </div>
-        ))}
+          ))
+        ) : (
+          <p className="text-center">No history available.</p>
+        )}
       </div>
 
-      {/* Bottom Navigation */}
-      <nav className="border-t bg-gray-50 p-4">
-        <div className="flex justify-between items-center max-w-xs mx-auto">
-          <a href = "/home">
-          <Button variant="ghost" size="icon">
-            <Home className="h-6 w-6" />
-          </Button>
-          </a>
-          <a href = "/accent">
-          <Button variant="default" size="icon" className="h-14 w-14 rounded-full">
-            <Mic className="h-6 w-6" />
-          </Button>
-          </a>
-          <a href = "/profile">
-          <Button variant="ghost" size="icon">
-            <User className="h-6 w-6" />
-          </Button>
-          </a>
-
-        </div>
-      </nav>
+     
     </div>
   )
 }

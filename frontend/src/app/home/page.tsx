@@ -6,25 +6,8 @@ import Image from "next/image"
 const image = "https://images.pexels.com/photos/28406651/pexels-photo-28406651/free-photo-of-historic-armenian-church-on-akdamar-island-van.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
 export default function DailyMissions() {
   return (
-    <div className="flex flex-col h-screen bg-white">
-      {/* Header */}
-      <header className="flex justify-between items-center p-4">
-        <div className="flex items-center gap-2">
-          <Image
-            src={image}
-            alt="US Flag"
-            width={32}
-            height={32}
-            className="rounded-full"
-          />
-        </div>
-        <Image
-          src={image}
-          alt="Logo"
-          width={40}
-          height={40}
-        />
-      </header>
+    <div className="flex flex-col pt-[4rem] ">
+
 
       {/* Main Content */}
       <main className="flex-1 p-4">
@@ -73,26 +56,7 @@ export default function DailyMissions() {
       </main>
 
       {/* Bottom Navigation */}
-      <nav className="border-t bg-gray-50 p-4">
-        <div className="flex justify-between items-center max-w-xs mx-auto">
-          <a href = "/home">
-          <Button variant="ghost" size="icon">
-            <Home className="h-6 w-6" />
-          </Button>
-          </a>
-          <a href = "/accent">
-          <Button variant="default" size="icon" className="h-14 w-14 rounded-full">
-            <Mic className="h-6 w-6" />
-          </Button>
-          </a>
-          <a href = "/profile">
-          <Button variant="ghost" size="icon">
-            <User className="h-6 w-6" />
-          </Button>
-          </a>
-
-        </div>
-      </nav>
+    
     </div>
   )
 }
