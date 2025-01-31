@@ -2,6 +2,10 @@
 
 Naccent is an innovative web application designed to help users improve their English pronunciation using advanced AI technology. The platform combines speech recognition, real-time feedback, and daily practice exercises to enhance users' speaking skills.
 
+Demo: https://www.youtube.com/watch?v=tdpOrq_nV44
+
+Devpost: https://devpost.com/software/naccent 
+
 ## Features
 
 ### 1. Real-time Pronunciation Assessment
